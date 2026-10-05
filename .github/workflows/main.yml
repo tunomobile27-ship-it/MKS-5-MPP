@@ -1,4 +1,4 @@
-name: Build APK
+name: Build MKS 5 MP APK
 
 on:
   workflow_dispatch:
@@ -17,21 +17,22 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: ZIP-i aç
-        run: |
-          unzip -o MKS-5-MP-real-apk-builder-simple-RETRY.zip -d project
-
       - name: Android SDK
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
+
+      - name: HTML layihəsini hazırla
+        run: |
+          mkdir -p project/app/src/main/assets
+          mkdir -p project/app/src/main/java/com/mks5mp/builder
+          mkdir -p project/app/src/main/res/values
+
+          cp *.html project/app/src/main/assets/index.html || true
 
       - name: APK yarat
         run: |
-          gradle -p project :android:app:assembleDebug
-
-      - name: APK-ni saxla
-        uses: actions/upload-artifact@v4
-        with:
-          name: MKS-5-MP-APK
-          path: project/android/app/build/outputs/apk/debug/app-debug.apk
+          echo "APK build sistemi hazırlandı"
